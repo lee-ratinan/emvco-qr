@@ -1198,8 +1198,8 @@ class EmvcoQr {
         } else
         {
             $this->content['fields'][self::COUNTRY_ID]['status'] = self::STATUS_ERR;
-            $this->content['fields'][self::COUNTRY_ID]['error']['code'] = 'D001';
-            $this->content['fields'][self::COUNTRY_ID]['error']['message'] = $this->error_codes['D001'];
+            $this->content['fields'][self::COUNTRY_ID]['error']['code'] = 'D002';
+            $this->content['fields'][self::COUNTRY_ID]['error']['message'] = $this->error_codes['D002'];
         }
     }
 
@@ -1259,7 +1259,7 @@ class EmvcoQr {
      * ID: 61
      * LENGTH: <= 10
      * VALUE: Merchant postal code
-     * MANDATORY
+     * OPTIONAL
      * FORMAT: ANS(<= 10)
      */
 
