@@ -12,3 +12,9 @@ if ($emv->decoder('000201010211520475315303702540512.23550201560512.34570512.345
 echo '<hr><pre>';
 print_r($emv->content);
 echo '</pre>';
+
+$emv2 = new \EmvcoQr\EmvcoQr();
+$emv2->generator_sg('SEX SHOP', '828748', 123.45, '0000');
+echo '<hr><pre>';
+print_r($emv2->content);
+echo '</pre>';

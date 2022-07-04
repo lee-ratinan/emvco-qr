@@ -947,14 +947,31 @@ class EmvcoQr {
         return TRUE;
     }
 
-    public function generator_sg ()
+    public function generator_sg ($merchant_name, $postal_code = '', $transaction_amount = self::ZERO, $merchant_category_code = self::MERCHANT_CATEGORY_CODE_VALUE_DEFAULT)
     {
-        //
-    }
-
-    public function generator_th_promptpay ()
-    {
-        //
+        $this->payload_format_indicator_generate();
+        // point of initiation will be generated after determine the amount
+        $this->merchant_category_code_generate($merchant_category_code);
+        $this->currency_generate(self::CURRENCY_SGD_NUMERIC);
+        $this->country_code_generate(self::COUNTRY_SG_CODE);
+        $this->merchant_name_generate($merchant_name);
+        $this->merchant_city_generate('SINGAPORE');
+        $amount = floatval($transaction_amount);
+        if (self::ZERO < $amount)
+        {
+            $this->point_of_initiation_generate(self::POINT_OF_INITIATION_VALUE_DYNAMIC);
+            $this->amount_generate($amount);
+        } else
+        {
+            $this->point_of_initiation_generate(self::POINT_OF_INITIATION_VALUE_STATIC);
+        }
+        if (! empty($postal_code))
+        {
+            $this->postal_code_generate($postal_code);
+        }
+        // GENERATE qr_string FIRST
+        $this->crc_generate();
+        echo $this->content['qr_string'];
     }
 
     /********************************************************************************
@@ -969,7 +986,7 @@ class EmvcoQr {
      * VERIFY 00
      * @param $value
      */
-    private function payload_format_indicator_verify($value)
+    private function payload_format_indicator_verify ($value)
     {
         echo 'payload_format_indicator_verify(' . $value . ')<br>';
         if ($value == self::PAYLOAD_FORMAT_INDICATOR_VALUE)
@@ -981,6 +998,16 @@ class EmvcoQr {
             $this->content['fields'][self::PAYLOAD_FORMAT_INDICATOR_ID]['error']['code'] = 'D001';
             $this->content['fields'][self::PAYLOAD_FORMAT_INDICATOR_ID]['error']['message'] = $this->error_codes['D001'];
         }
+    }
+
+    /**
+     * GENERATE 00
+     */
+    private function payload_format_indicator_generate ()
+    {
+        echo 'payload_format_indicator_generate()<br>';
+        $this->content['fields'][self::PAYLOAD_FORMAT_INDICATOR_ID]['value'] = self::PAYLOAD_FORMAT_INDICATOR_VALUE;
+        $this->content['fields'][self::PAYLOAD_FORMAT_INDICATOR_ID]['status'] = self::STATUS_OK;
     }
 
     /********************************************************************************
@@ -1010,6 +1037,18 @@ class EmvcoQr {
         }
     }
 
+    /**
+     * GENERATE 01
+     * @param $value
+     */
+    private function point_of_initiation_generate ($value)
+    {
+        echo 'point_of_initiation_generate(' . $value . ')<br>';
+        $this->content['fields'][self::POINT_OF_INITIATION_ID]['value'] = $value;
+        $this->content['fields'][self::POINT_OF_INITIATION_ID]['status'] = self::STATUS_OK;
+        $this->content['fields'][self::POINT_OF_INITIATION_ID]['description'] = $this->point_of_initiation_labels[$value];
+    }
+
     /********************************************************************************
      * ID: 52
      * LENGTH: 04
@@ -1035,6 +1074,22 @@ class EmvcoQr {
             $this->content['fields'][self::MERCHANT_CATEGORY_CODE_ID]['error']['code'] = 'D001';
             $this->content['fields'][self::MERCHANT_CATEGORY_CODE_ID]['error']['message'] = $this->error_codes['D001'];
         }
+    }
+
+    /**
+     * GENERATE 52
+     * @param $value
+     */
+    private function merchant_category_code_generate ($value)
+    {
+        echo 'merchant_category_code_generate(' . $value . ')<br>';
+        if (isset($this->merchant_category_codes[$value]))
+        {
+            $value = self::MERCHANT_CATEGORY_CODE_VALUE_DEFAULT;
+        }
+        $this->content['fields'][self::MERCHANT_CATEGORY_CODE_ID]['value'] = $value;
+        $this->content['fields'][self::MERCHANT_CATEGORY_CODE_ID]['description'] = $this->merchant_category_codes[$value];
+        $this->content['fields'][self::MERCHANT_CATEGORY_CODE_ID]['status'] = self::STATUS_OK;
     }
 
     /********************************************************************************
@@ -1065,6 +1120,18 @@ class EmvcoQr {
         }
     }
 
+    /**
+     * GENERATE 53
+     * @param $value
+     */
+    private function currency_generate ($value)
+    {
+        echo 'currency_generate(' . $value . ')<br>';
+        $this->content['fields'][self::CURRENCY_ID]['value'] = $value;
+        $this->content['fields'][self::CURRENCY_ID]['status'] = self::STATUS_OK;
+        $this->content['fields'][self::CURRENCY_ID]['description'] = $this->currency_codes[$value];
+    }
+
     /********************************************************************************
      * ID: 54
      * LENGTH: <= 13
@@ -1091,6 +1158,17 @@ class EmvcoQr {
             $this->content['fields'][self::AMOUNT_ID]['error']['code'] = 'D001';
             $this->content['fields'][self::AMOUNT_ID]['error']['message'] = $this->error_codes['D001'];
         }
+    }
+
+    /**
+     * GENERATE 54
+     * @param $value
+     */
+    private function amount_generate ($value)
+    {
+        echo 'amount_generate(' . $value . ')<br>';
+        $this->content['fields'][self::AMOUNT_ID]['value'] = $value;
+        $this->content['fields'][self::AMOUNT_ID]['status'] = self::STATUS_OK;
     }
 
     /********************************************************************************
@@ -1203,6 +1281,18 @@ class EmvcoQr {
         }
     }
 
+    /**
+     * GENERATE 58
+     * @param $value
+     */
+    private function country_code_generate ($value)
+    {
+        echo 'country_code_generate(' . $value . ')<br>';
+        $this->content['fields'][self::COUNTRY_ID]['value'] = $value;
+        $this->content['fields'][self::COUNTRY_ID]['status'] = self::STATUS_OK;
+        $this->content['fields'][self::COUNTRY_ID]['description'] = $this->country_codes[$value];
+    }
+
     /********************************************************************************
      * ID: 59
      * LENGTH: <= 25
@@ -1227,6 +1317,21 @@ class EmvcoQr {
             $this->content['fields'][self::MERCHANT_NAME_ID]['error']['code'] = 'D001';
             $this->content['fields'][self::MERCHANT_NAME_ID]['error']['message'] = $this->error_codes['D001'];
         }
+    }
+
+    /**
+     * GENERATE 59
+     * @param $value
+     */
+    private function merchant_name_generate ($value)
+    {
+        echo 'merchant_name_generate(' . $value . ')<br>';
+        if (self::MERCHANT_NAME_MAX_LENGTH < strlen($value))
+        {
+            $value = substr($value, self::ZERO, self::MERCHANT_NAME_MAX_LENGTH);
+        }
+        $this->content['fields'][self::MERCHANT_NAME_ID]['value'] = $value;
+        $this->content['fields'][self::MERCHANT_NAME_ID]['status'] = self::STATUS_OK;
     }
 
     /********************************************************************************
@@ -1255,6 +1360,21 @@ class EmvcoQr {
         }
     }
 
+    /**
+     * GENERATE 60
+     * @param $value
+     */
+    private function merchant_city_generate ($value)
+    {
+        echo 'merchant_city_generate(' . $value . ')<br>';
+        if (self::MERCHANT_CITY_MAX_LENGTH < strlen($value))
+        {
+            $value = substr($value, self::ZERO, self::MERCHANT_CITY_MAX_LENGTH);
+        }
+        $this->content['fields'][self::MERCHANT_CITY_ID]['value'] = $value;
+        $this->content['fields'][self::MERCHANT_CITY_ID]['status'] = self::STATUS_OK;
+    }
+
     /********************************************************************************
      * ID: 61
      * LENGTH: <= 10
@@ -1279,6 +1399,21 @@ class EmvcoQr {
             $this->content['fields'][self::POSTAL_CODE_ID]['error']['code'] = 'D001';
             $this->content['fields'][self::POSTAL_CODE_ID]['error']['message'] = $this->error_codes['D001'];
         }
+    }
+
+    /**
+     * GENERATE 61
+     * @param $value
+     */
+    private function postal_code_generate ($value)
+    {
+        echo 'postal_code_generate(' . $value . ')<br>';
+        if (self::POSTAL_CODE_MAX_LENGTH < strlen($value))
+        {
+            $value = substr($value, self::ZERO, self::POSTAL_CODE_MAX_LENGTH);
+        }
+        $this->content['fields'][self::POSTAL_CODE_ID]['value'] = $value;
+        $this->content['fields'][self::POSTAL_CODE_ID]['status'] = self::STATUS_OK;
     }
 
     /********************************************************************************
@@ -1309,6 +1444,21 @@ class EmvcoQr {
             $this->content['fields'][self::CRC_ID]['error']['code'] = 'D003';
             $this->content['fields'][self::CRC_ID]['error']['message'] = $this->error_codes['D003'];
         }
+    }
+
+    /**
+     * GENERATE 64
+     * PREREQUISITE: CALL GENERATE QR FIRST
+     */
+    private function crc_generate ()
+    {
+        echo 'crc_generate()<br>';
+        $length_minus_crc = strlen($this->content['qr_string']) . self::CRC_ID . self::CRC_LENGTH;
+        $the_string = substr($this->content['qr_string'], self::ZERO, $length_minus_crc);
+        $crc = $this->CRC16HexDigest($the_string);
+        $this->content['qr_string'] .= self::CRC_ID . self::CRC_LENGTH . $crc;
+        $this->content['fields'][self::CRC_ID]['value'] = $crc;
+        $this->content['fields'][self::CRC_ID]['status'] = self::STATUS_OK;
     }
 
     /********************************************************************************
