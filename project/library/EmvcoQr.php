@@ -431,11 +431,11 @@ class EmvcoQr {
     const CURRENCY_THB_NUMERIC = '764';
     private $currency_codes = [
 //        self::CURRENCY_HKD_NUMERIC => self::CURRENCY_HKD_CODE,
-//        self::CURRENCY_IDR_NUMERIC => self::CURRENCY_IDR_CODE,
+        self::CURRENCY_IDR_NUMERIC => self::CURRENCY_IDR_CODE,
 //        self::CURRENCY_INR_NUMERIC => self::CURRENCY_INR_CODE,
-//        self::CURRENCY_MYR_NUMERIC => self::CURRENCY_MYR_CODE,
+        self::CURRENCY_MYR_NUMERIC => self::CURRENCY_MYR_CODE,
         self::CURRENCY_SGD_NUMERIC => self::CURRENCY_SGD_CODE,
-//        self::CURRENCY_THB_NUMERIC => self::CURRENCY_THB_CODE
+        self::CURRENCY_THB_NUMERIC => self::CURRENCY_THB_CODE
     ];
     // 54
     const AMOUNT_ID = '54';
@@ -482,11 +482,11 @@ class EmvcoQr {
     const COUNTRY_TH_NAME = 'THAILAND';
     private $country_codes = [
 //        self::COUNTRY_HK_CODE => self::COUNTRY_HK_NAME,
-//        self::COUNTRY_ID_CODE => self::COUNTRY_ID_NAME,
+        self::COUNTRY_ID_CODE => self::COUNTRY_ID_NAME,
 //        self::COUNTRY_IN_CODE => self::COUNTRY_IN_NAME,
-//        self::COUNTRY_MY_CODE => self::COUNTRY_MY_NAME,
+        self::COUNTRY_MY_CODE => self::COUNTRY_MY_NAME,
         self::COUNTRY_SG_CODE => self::COUNTRY_SG_NAME,
-//        self::COUNTRY_TH_CODE => self::COUNTRY_TH_NAME,
+        self::COUNTRY_TH_CODE => self::COUNTRY_TH_NAME,
     ];
     // 59
     const MERCHANT_NAME_ID = '59';
@@ -572,7 +572,7 @@ class EmvcoQr {
     private $error_codes = [
         'D001' => 'THE FIELD IS INVALID',
         'D002' => 'THE FIELD IS INVALID OR NOT SUPPORTED',
-        'D003' => 'THE CRC IS NOT VALID - THE QR CODE WAS ALTERED',
+        'D003' => 'THE CRC IS NOT VALID - THE QR CODE WAS INVALIDATED',
         'D004' => '',
         'D005' => '',
         'D006' => '',
@@ -597,6 +597,7 @@ class EmvcoQr {
         'fields'    => [
             // 00
             self::PAYLOAD_FORMAT_INDICATOR_ID            => [
+                'payload'     => NULL,
                 'label'       => self::PAYLOAD_FORMAT_INDICATOR_LABEL,
                 'value'       => NULL,
                 'status'      => self::STATUS_NOT_YET_PROCESSED,
@@ -604,6 +605,7 @@ class EmvcoQr {
             ],
             // 01
             self::POINT_OF_INITIATION_ID                 => [
+                'payload'     => NULL,
                 'label'       => self::POINT_OF_INITIATION_LABEL,
                 'value'       => NULL,
                 'status'      => self::STATUS_NOT_YET_PROCESSED,
@@ -616,6 +618,7 @@ class EmvcoQr {
             ],
             // 52
             self::MERCHANT_CATEGORY_CODE_ID              => [
+                'payload'     => NULL,
                 'label'       => self::MERCHANT_CATEGORY_CODE_LABEL,
                 'value'       => NULL,
                 'status'      => self::STATUS_NOT_YET_PROCESSED,
@@ -623,6 +626,7 @@ class EmvcoQr {
             ],
             // 53
             self::CURRENCY_ID                            => [
+                'payload'     => NULL,
                 'label'       => self::CURRENCY_LABEL,
                 'value'       => NULL,
                 'status'      => self::STATUS_NOT_YET_PROCESSED,
@@ -630,6 +634,7 @@ class EmvcoQr {
             ],
             // 54
             self::AMOUNT_ID                              => [
+                'payload'     => NULL,
                 'label'       => self::AMOUNT_LABEL,
                 'value'       => NULL,
                 'status'      => self::STATUS_NOT_YET_PROCESSED,
@@ -637,6 +642,7 @@ class EmvcoQr {
             ],
             // 55
             self::TIP_OR_CONVENIENCE_FEE_INDICATOR_ID    => [
+                'payload'     => NULL,
                 'label'       => self::TIP_OR_CONVENIENCE_FEE_INDICATOR_LABEL,
                 'value'       => NULL,
                 'status'      => self::STATUS_NOT_YET_PROCESSED,
@@ -644,6 +650,7 @@ class EmvcoQr {
             ],
             // 56
             self::VALUE_OF_CONVENIENCE_FEE_FIXED_ID      => [
+                'payload'     => NULL,
                 'label'       => self::VALUE_OF_CONVENIENCE_FEE_FIXED_LABEL,
                 'value'       => NULL,
                 'status'      => self::STATUS_NOT_YET_PROCESSED,
@@ -651,6 +658,7 @@ class EmvcoQr {
             ],
             // 57
             self::VALUE_OF_CONVENIENCE_FEE_PERCENTAGE_ID => [
+                'payload'     => NULL,
                 'label'       => self::VALUE_OF_CONVENIENCE_FEE_PERCENTAGE_LABEL,
                 'value'       => NULL,
                 'status'      => self::STATUS_NOT_YET_PROCESSED,
@@ -658,6 +666,7 @@ class EmvcoQr {
             ],
             // 58
             self::COUNTRY_ID                             => [
+                'payload'     => NULL,
                 'label'       => self::COUNTRY_LABEL,
                 'value'       => NULL,
                 'status'      => self::STATUS_NOT_YET_PROCESSED,
@@ -665,6 +674,7 @@ class EmvcoQr {
             ],
             // 59
             self::MERCHANT_NAME_ID                       => [
+                'payload'     => NULL,
                 'label'       => self::MERCHANT_NAME_LABEL,
                 'value'       => NULL,
                 'status'      => self::STATUS_NOT_YET_PROCESSED,
@@ -672,6 +682,7 @@ class EmvcoQr {
             ],
             // 60
             self::MERCHANT_CITY_ID                       => [
+                'payload'     => NULL,
                 'label'       => self::MERCHANT_CITY_LABEL,
                 'value'       => NULL,
                 'status'      => self::STATUS_NOT_YET_PROCESSED,
@@ -679,6 +690,7 @@ class EmvcoQr {
             ],
             // 61
             self::POSTAL_CODE_ID                         => [
+                'payload'     => NULL,
                 'label'       => self::POSTAL_CODE_LABEL,
                 'value'       => NULL,
                 'status'      => self::STATUS_NOT_YET_PROCESSED,
@@ -686,69 +698,81 @@ class EmvcoQr {
             ],
             // 62
             self::ADDITIONAL_DATA_ID                     => [
-                'label' => self::ADDITIONAL_DATA_LABEL,
-                'data'  => [
+                'payload' => NULL,
+                'label'   => self::ADDITIONAL_DATA_LABEL,
+                'data'    => [
                     self::ADDITIONAL_DATA_BILL_NUMBER_ID                      => [
+                        'payload'     => NULL,
                         'label'       => self::ADDITIONAL_DATA_BILL_NUMBER_LABEL,
                         'value'       => NULL,
                         'status'      => self::STATUS_NOT_YET_PROCESSED,
                         'description' => NULL
                     ],
                     self::ADDITIONAL_DATA_MOBILE_NUMBER_ID                    => [
+                        'payload'     => NULL,
                         'label'       => self::ADDITIONAL_DATA_MOBILE_NUMBER_LABEL,
                         'value'       => NULL,
                         'status'      => self::STATUS_NOT_YET_PROCESSED,
                         'description' => NULL
                     ],
                     self::ADDITIONAL_DATA_STORE_LABEL_ID                      => [
+                        'payload'     => NULL,
                         'label'       => self::ADDITIONAL_DATA_STORE_LABEL_LABEL,
                         'value'       => NULL,
                         'status'      => self::STATUS_NOT_YET_PROCESSED,
                         'description' => NULL
                     ],
                     self::ADDITIONAL_DATA_LOYALTY_NUMBER_ID                   => [
+                        'payload'     => NULL,
                         'label'       => self::ADDITIONAL_DATA_LOYALTY_NUMBER_LABEL,
                         'value'       => NULL,
                         'status'      => self::STATUS_NOT_YET_PROCESSED,
                         'description' => NULL
                     ],
                     self::ADDITIONAL_DATA_REFERENCE_LABEL_ID                  => [
+                        'payload'     => NULL,
                         'label'       => self::ADDITIONAL_DATA_REFERENCE_LABEL_LABEL,
                         'value'       => NULL,
                         'status'      => self::STATUS_NOT_YET_PROCESSED,
                         'description' => NULL
                     ],
                     self::ADDITIONAL_DATA_CUSTOMER_LABEL_ID                   => [
+                        'payload'     => NULL,
                         'label'       => self::ADDITIONAL_DATA_CUSTOMER_LABEL_LABEL,
                         'value'       => NULL,
                         'status'      => self::STATUS_NOT_YET_PROCESSED,
                         'description' => NULL
                     ],
                     self::ADDITIONAL_DATA_TERMINAL_LABEL_ID                   => [
+                        'payload'     => NULL,
                         'label'       => self::ADDITIONAL_DATA_TERMINAL_LABEL_LABEL,
                         'value'       => NULL,
                         'status'      => self::STATUS_NOT_YET_PROCESSED,
                         'description' => NULL
                     ],
                     self::ADDITIONAL_DATA_PURPOSE_OF_TRANSACTION_ID           => [
+                        'payload'     => NULL,
                         'label'       => self::ADDITIONAL_DATA_PURPOSE_OF_TRANSACTION_LABEL,
                         'value'       => NULL,
                         'status'      => self::STATUS_NOT_YET_PROCESSED,
                         'description' => NULL
                     ],
                     self::ADDITIONAL_DATA_ADDITIONAL_CONSUMER_DATA_REQUEST_ID => [
+                        'payload'     => NULL,
                         'label'       => self::ADDITIONAL_DATA_ADDITIONAL_CONSUMER_DATA_REQUEST_LABEL,
                         'value'       => NULL,
                         'status'      => self::STATUS_NOT_YET_PROCESSED,
                         'description' => NULL
                     ],
                     self::ADDITIONAL_DATA_MERCHANT_TAX_ID_ID                  => [
+                        'payload'     => NULL,
                         'label'       => self::ADDITIONAL_DATA_MERCHANT_TAX_ID_LABEL,
                         'value'       => NULL,
                         'status'      => self::STATUS_NOT_YET_PROCESSED,
                         'description' => NULL
                     ],
                     self::ADDITIONAL_DATA_MERCHANT_CHANNEL_ID                 => [
+                        'payload'     => NULL,
                         'label'       => self::ADDITIONAL_DATA_MERCHANT_CHANNEL_LABEL,
                         'value'       => NULL,
                         'status'      => self::STATUS_NOT_YET_PROCESSED,
@@ -758,21 +782,25 @@ class EmvcoQr {
             ],
             // 64
             self::LANGUAGE_TEMPLATE_ID                   => [
-                'label' => self::LANGUAGE_TEMPLATE_LABEL,
-                'data'  => [
+                'payload' => NULL,
+                'label'   => self::LANGUAGE_TEMPLATE_LABEL,
+                'data'    => [
                     self::LANGUAGE_TEMPLATE_LANGUAGE_CODE_ID => [
+                        'payload'     => NULL,
                         'label'       => self::LANGUAGE_TEMPLATE_LANGUAGE_CODE_LABEL,
                         'value'       => NULL,
                         'status'      => self::STATUS_NOT_YET_PROCESSED,
                         'description' => NULL
                     ],
                     self::LANGUAGE_TEMPLATE_MERCHANT_NAME_ID => [
+                        'payload'     => NULL,
                         'label'       => self::LANGUAGE_TEMPLATE_MERCHANT_NAME_LABEL,
                         'value'       => NULL,
                         'status'      => self::STATUS_NOT_YET_PROCESSED,
                         'description' => NULL
                     ],
                     self::LANGUAGE_TEMPLATE_CITY_ID          => [
+                        'payload'     => NULL,
                         'label'       => self::LANGUAGE_TEMPLATE_CITY_LABEL,
                         'value'       => NULL,
                         'status'      => self::STATUS_NOT_YET_PROCESSED,
@@ -782,6 +810,7 @@ class EmvcoQr {
             ],
             // 63
             self::CRC_ID                                 => [
+                'payload'     => NULL,
                 'label'       => self::CRC_LABEL,
                 'value'       => NULL,
                 'status'      => self::STATUS_NOT_YET_PROCESSED,
@@ -886,12 +915,13 @@ class EmvcoQr {
         // PROCESS STRING
         while ( ! empty($string))
         {
-            $strId = substr($string, self::ZERO, self::TWO);
-            $intId = intval($strId);
+            $strId     = substr($string, self::ZERO, self::TWO);
             $intLength = intval(substr($string, self::TWO, self::TWO));
-            $strValue = substr($string, self::FOUR, $intLength);
+            $strValue  = substr($string, self::FOUR, $intLength);
+            $payload   = substr($string, self::ZERO, $intLength);
             echo $strId . ' / ' . $intLength . ' / ' . $strValue . '<br>';
-            $this->content['fields'][$strId]['value'] = $strValue;
+            $this->content['fields'][$strId]['value']   = $strValue;
+            $this->content['fields'][$strId]['payload'] = $payload;
             switch ($strId)
             {
                 case self::PAYLOAD_FORMAT_INDICATOR_ID:
